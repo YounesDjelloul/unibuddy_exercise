@@ -113,6 +113,33 @@ describe('MessageData', () => {
 
       expect(message).toMatchObject(expectedResponse);
     });
+
+    it('successfully creates a message with multiple tags', async () => {
+      const conversationId = new ObjectID();
+      const messageTags = ['firstTAG', 'secondTAG', 'thirdTAG'];
+
+      const message = await messageData.create(
+        { conversationId, text: 'Hello world' },
+        senderId,
+        messageTags,
+      );
+
+      const expectedResponse = {
+        likes: [],
+        resolved: false,
+        deleted: false,
+        reactions: [],
+        text: 'Hello world',
+        senderId: senderId,
+        conversationId: conversationId,
+        conversation: { id: conversationId.toHexString() },
+        likesCount: 0,
+        sender: { id: senderId.toHexString() },
+        tags: ['firstTAG', 'secondTAG', 'thirdTAG'],
+      };
+
+      expect(message).toMatchObject(expectedResponse);
+    });
   });
 
   describe('get', () => {
