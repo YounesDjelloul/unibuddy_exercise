@@ -161,6 +161,9 @@ export class ChatMessageModel {
   conversation: { id: string };
   likesCount: number;
   sender: { id: string };
+
+  @Prop({ type: [String], default: [] })
+  tags?: string[];
 }
 
 export type ChatMessageDocument = ChatMessageModel & Document;

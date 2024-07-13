@@ -63,7 +63,7 @@ describe('MessageData', () => {
       expect(messageData.create).toBeDefined();
     });
 
-    it('successfully creates a message', async () => {
+    it('successfully creates a message with no tags', async () => {
       const conversationId = new ObjectID();
       const message = await messageData.create(
         { conversationId, text: 'Hello world' },
@@ -81,6 +81,33 @@ describe('MessageData', () => {
         conversation: { id: conversationId.toHexString() },
         likesCount: 0,
         sender: { id: senderId.toHexString() },
+      };
+
+      expect(message).toMatchObject(expectedResponse);
+    });
+
+    it('successfully creates a message with one tag', async () => {
+      const conversationId = new ObjectID();
+      const messageTags = ['firstTAG'];
+
+      const message = await messageData.create(
+        { conversationId, text: 'Hello world' },
+        senderId,
+        messageTags,
+      );
+
+      const expectedResponse = {
+        likes: [],
+        resolved: false,
+        deleted: false,
+        reactions: [],
+        text: 'Hello world',
+        senderId: senderId,
+        conversationId: conversationId,
+        conversation: { id: conversationId.toHexString() },
+        likesCount: 0,
+        sender: { id: senderId.toHexString() },
+        tags: ['firstTAG'],
       };
 
       expect(message).toMatchObject(expectedResponse);
