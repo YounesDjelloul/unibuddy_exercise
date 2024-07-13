@@ -30,7 +30,7 @@ export class MessageData {
     chatMessage.conversationId = data.conversationId;
     chatMessage.created = new Date();
     chatMessage.deleted = false;
-    chatMessage.tags = tags;
+    chatMessage.tags = tags ?? [];
 
     createRichContent(data, chatMessage);
 

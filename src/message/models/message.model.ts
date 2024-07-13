@@ -154,6 +154,12 @@ export class ChatMessageModel {
   })
   reactions?: Reaction[];
 
+  @Prop({
+    type: [String],
+    default: [],
+  })
+  tags?: (string | undefined)[];
+
   /**
    * All the properties below are virtual properties
    * @url https://mongoosejs.com/docs/tutorials/virtuals.html
@@ -161,9 +167,6 @@ export class ChatMessageModel {
   conversation: { id: string };
   likesCount: number;
   sender: { id: string };
-
-  @Prop({ type: [String], default: [] })
-  tags?: string[];
 }
 
 export type ChatMessageDocument = ChatMessageModel & Document;
