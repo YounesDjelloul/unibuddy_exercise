@@ -42,7 +42,6 @@ export class MessageData {
     return chatMessageToObject(message);
   }
 
-
   async getChatConversationMessages(
     data: GetMessageDto,
   ): Promise<PaginatedChatMessages> {
@@ -88,8 +87,22 @@ export class MessageData {
   }
 
   async delete(messageId: ObjectID): Promise<ChatMessage> {
-    // TODO allow a message to be marked as deleted
-    return new ChatMessage() // Minimum to pass ts checks -replace this
+    const query = { _id: messageId };
+    const updateDocument = {
+      $set: { deleted: true },
+    };
+
+    const message = await this.chatMessageModel.findOneAndUpdate(
+      query,
+      updateDocument,
+      {
+        new: true,
+        returnOriginal: false,
+      },
+    );
+    if (!message) throw new Error('Message not found');
+
+    return chatMessageToObject(message);
   }
 
   async resolve(messageId: ObjectID): Promise<ChatMessage> {

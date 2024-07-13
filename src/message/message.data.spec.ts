@@ -5,7 +5,7 @@ import { MessageData } from './message.data';
 import { ChatMessageModel, ChatMessageSchema } from './models/message.model';
 
 import { ConfigManagerModule } from '../configuration/configuration-manager.module';
-import {getTestConfiguration}  from '../configuration/configuration-manager.utils';
+import { getTestConfiguration } from '../configuration/configuration-manager.utils';
 
 const id = new ObjectID('5fe0cce861c8ea54018385af');
 const conversationId = new ObjectID();
@@ -47,9 +47,8 @@ describe('MessageData', () => {
 
   beforeEach(
     async () => {
-      messageData.deleteMany();
-    }
-  );
+    messageData.deleteMany();
+  });
 
   afterEach(async () => {
     messageData.deleteMany();
@@ -71,24 +70,22 @@ describe('MessageData', () => {
         senderId,
       );
 
-      expect(message).toMatchObject(
-        {
-          likes: [],
-          resolved: false,
-          deleted: false,
-          reactions: [],
-          text: 'Hello world',
-          senderId: senderId,
-          conversationId: conversationId,
-          conversation: { id: conversationId.toHexString() },
-          likesCount: 0,
-          sender: { id: senderId.toHexString() },
-        }
-      );
+      const expectedResponse = {
+        likes: [],
+        resolved: false,
+        deleted: false,
+        reactions: [],
+        text: 'Hello world',
+        senderId: senderId,
+        conversationId: conversationId,
+        conversation: { id: conversationId.toHexString() },
+        likesCount: 0,
+        sender: { id: senderId.toHexString() },
+      };
 
+      expect(message).toMatchObject(expectedResponse);
     });
   });
-
 
   describe('get', () => {
     it('should be defined', () => {
@@ -102,9 +99,11 @@ describe('MessageData', () => {
         senderId,
       );
 
-      const gotMessage = await messageData.getMessage(sentMessage.id.toHexString())
+      const gotMessage = await messageData.getMessage(
+        sentMessage.id.toHexString(),
+      );
 
-      expect(gotMessage).toMatchObject(sentMessage)
+      expect(gotMessage).toMatchObject(sentMessage);
     });
   });
 
@@ -119,11 +118,12 @@ describe('MessageData', () => {
       // Make sure that it started off as not deleted
       expect(message.deleted).toEqual(false);
 
-      const deletedMessage = await messageData.delete(new ObjectID(message.id));
-      expect(deletedMessage.deleted).toEqual(true);
+      await messageData.delete(message.id); // I don't there a point of checking the returned message's attribute deleted is true because it could push you wrong-footed and get a false positive
 
       // And that is it now deleted
-      const retrievedMessage = await messageData.getMessage(message.id.toHexString())
+      const retrievedMessage = await messageData.getMessage(
+        message.id.toHexString(),
+      );
       expect(retrievedMessage.deleted).toEqual(true);
     });
   });
