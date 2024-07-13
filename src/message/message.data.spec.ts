@@ -182,4 +182,32 @@ describe('MessageData', () => {
       expect(retrievedMessage.deleted).toEqual(true);
     });
   });
+
+  describe('update', () => {
+    it('can update a chatMessage tags with an empty tags list', async () => {
+      const conversationId = new ObjectID();
+      const sentMessage = await messageData.create(
+        { conversationId, text: 'Hello world' },
+        senderId,
+        ['TAG1', 'TAG2'],
+      );
+
+      // // Make sure that it started off with two tags
+      expect(sentMessage.tags).toEqual(['TAG1', 'TAG2']);
+
+      const newTagsList: string[] = [];
+
+      const updatedMessage = await messageData.updateMessage(
+        sentMessage.id,
+        newTagsList,
+      );
+
+      const gotMessageAfterUpdate = await messageData.getMessage(
+        sentMessage.id.toHexString(),
+      );
+
+      expect(updatedMessage.tags).toEqual(newTagsList);
+      expect(gotMessageAfterUpdate.tags).toEqual(newTagsList);
+    });
+  });
 });

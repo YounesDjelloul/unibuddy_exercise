@@ -107,6 +107,25 @@ export class MessageData {
     return chatMessageToObject(message);
   }
 
+  async updateMessage(chatMessageId: ObjectID, newTagsList: string[]) {
+    const query = { _id: chatMessageId };
+    const updateDocument = {
+      $set: { tags: newTagsList },
+    };
+
+    const message = await this.chatMessageModel.findOneAndUpdate(
+      query,
+      updateDocument,
+      {
+        new: true,
+        returnOriginal: false,
+      },
+    );
+    if (!message) throw new Error('Message not found');
+
+    return chatMessageToObject(message);
+  }
+
   async resolve(messageId: ObjectID): Promise<ChatMessage> {
     const filterBy = { _id: messageId };
     const updateProperty = { resolved: true };

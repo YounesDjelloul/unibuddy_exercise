@@ -154,6 +154,8 @@ export class ChatMessageModel {
   })
   reactions?: Reaction[];
 
+  // I didn't want to complicate things as the current requirements are just to add and update tags to messages. Otherwise,
+  // We could have created a dedicated Class Model for it.
   @Prop({
     type: [String],
     default: [],
